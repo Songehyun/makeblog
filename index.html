@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>indexpage</title>
   <style>
     body{
       margin: 0;
@@ -29,6 +29,7 @@
     #root > div:nth-child(1) > #HomeTitle {
       display: flex;
       flex-direction: column;
+      cursor: pointer;
     }
     #root > div:nth-child(2){
       display: flex;
@@ -38,23 +39,25 @@
     #root > div:nth-child(2) > #MakeNote{
       display: flex;
       flex-direction: column;
+      cursor: pointer;
       /* margin-right: 10px; */
     }
     #root > #NoteTitle{
       display: flex;
       flex-direction: column-reverse;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div id="root">
     <div>
-      <div id="HomeTitle">
+      <div id="HomeTitle" onclick="location.href='./index.html'">
         <h2>홈페이지 이름</h2>
       </div>
     </div>
     <div>
-      <div id="MakeNote">
+      <div id="MakeNote" onclick="location.href='./writenote.html'">
         <h2>글쓰기</h2>
       </div>
     </div>
