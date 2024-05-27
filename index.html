@@ -30,6 +30,20 @@
       display: flex;
       flex-direction: column;
     }
+    #root > div:nth-child(2){
+      display: flex;
+      flex-direction: column;
+      height: 10vh;
+    }
+    #root > div:nth-child(2) > #MakeNote{
+      display: flex;
+      flex-direction: column;
+      /* margin-right: 10px; */
+    }
+    #root > #NoteTitle{
+      display: flex;
+      flex-direction: column-reverse;
+    }
   </style>
 </head>
 <body>
@@ -39,8 +53,13 @@
         <h2>홈페이지 이름</h2>
       </div>
     </div>
-    <div></div>
-    <div></div>
+    <div>
+      <div id="MakeNote">
+        <h2>글쓰기</h2>
+      </div>
+    </div>
+    <div id="NoteTitle">
+    </div>
   </div>
 </body>
 </html>
