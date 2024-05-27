@@ -75,3 +75,6 @@ body{
   flex-direction: column;
   cursor: pointer;
 }
+#writecontent {
+  resize: none;
+}
