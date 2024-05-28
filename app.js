@@ -3,11 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const loadserver = require('./loadserver.js');
 
+let newdiv = '';
+
 const server = http.createServer((req, res) => {
   if (req.method === "GET"){
   loadserver("/", "index.html", "text/html", req, res);
   loadserver("/index.html", "index.html","text/html", req, res);
-  loadserver("/indexadd.js", "indexadd.js","text/javascript", req, res);
   loadserver("/indexstyle.css", "indexstyle.css","text/css", req, res);
   loadserver("/writenote.html", "writenote.html","text/html", req, res);
   loadserver("/writenotestyle.css", "writenotestyle.css","text/css", req, res);
@@ -22,9 +23,7 @@ const server = http.createServer((req, res) => {
         const writetitle = parsedData.get("writetitle");
         const writecontent = parsedData.get("writecontent");
 
-        let today = new Date();
-
-        const jsonData = `<!DOCTYPE html>
+        const htmlData = `<!DOCTYPE html>
         <html lang="en">
         <head>
           <meta charset="UTF-8">
@@ -49,9 +48,40 @@ const server = http.createServer((req, res) => {
         </body>
         </html>`;
 
-        // let addlink = today.toLocaleDateString()+writetitle
-        
-        fs.writeFile(path.join(__dirname, `${today.toLocaleDateString()}${writetitle}.html`), jsonData, (err) => {
+        newdiv += `<div onclick="location.href='./${writetitle}.html'">${writetitle}</div>`
+
+        const indexData = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>indexpage</title>
+          <link rel="stylesheet" href="indexstyle.css">
+        </head>
+        <body>
+          <div id="root">
+            <div>
+              <div id="HomeTitle">
+                <h1 onclick="location.href='./index.html'">홈페이지 이름</h2>
+              </div>
+            </div>
+            <div>
+              <div id="MakeNote">
+                <h2 onclick="location.href='./writenote.html'">글쓰기</h2>
+              </div>
+            </div>
+            <div id="NoteTitle">
+              ${newdiv}
+            </div>
+          </div>
+        </body>
+        </html>`;
+
+        fs.writeFile(path.join(__dirname, "index.html"), indexData, (err) => {
+
+        })
+        fs.writeFile(path.join(__dirname, `./public/${writetitle}.html`), htmlData, (err) => {
           if (err) {
             res.writeHead(500, {"Content-Type": "text/plain; charset=utf-8"});
             res.end("서버 자체 에러");
@@ -67,6 +97,7 @@ const server = http.createServer((req, res) => {
             res.end(data);
           });
         });
+
       });
     } else {
       res.writeHead(404, {"Content-Type": "text/plain; charset=utf-8"});
@@ -78,6 +109,7 @@ const server = http.createServer((req, res) => {
     res.end("404 code는 페이지를 찾을 수 없음");
   }
 });
+
 
 const PORT = 8080;
 server.listen(PORT, () => {
