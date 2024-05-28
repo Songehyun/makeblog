@@ -6,7 +6,7 @@ const flieUtils = {
     } else {
       fliePath = "./public" + url;
     }
-    return fliePath;
+    return decodeURI(fliePath);
   },
   getFlieExtension: function(fliePath){
     const path = require('path');

@@ -7,12 +7,12 @@ let newdiv = '';
 
 const server = http.createServer((req, res) => {
   let url = req.url
-  let fliePath = flieUtils.getFliePath(url)
-  let ext = flieUtils.getFlieExtension(fliePath)
+  let filePath = flieUtils.getFliePath(url)
+  let ext = flieUtils.getFlieExtension(filePath)
   let contype = flieUtils.getContentType(ext)
   if (req.method === "GET"){
-    console.log(req.url);
     if(req.url === url){
+      console.log(req.url);
       fs.readFile(filePath,(err,data)=>{
         if(err){
           res.writeHead(500,{"Content-Type":"text/plain; charset=UTF-8"});
@@ -34,7 +34,6 @@ const server = http.createServer((req, res) => {
         const parsedData = new URLSearchParams(body);
         const writetitle = parsedData.get("writetitle");
         const writecontent = parsedData.get("writecontent");
-
         const htmlData = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -91,15 +90,17 @@ const server = http.createServer((req, res) => {
         </html>`;
 
         fs.writeFile(path.join(__dirname, "./public/index.html"), indexData, (err) => {
-
-        })
+          if(err){
+            console.log("오류")
+          }
+        });
         fs.writeFile(path.join(__dirname, `./public/${writetitle}.html`), htmlData, (err) => {
           if (err) {
             res.writeHead(500, {"Content-Type": "text/plain; charset=utf-8"});
             res.end("서버 자체 에러");
             return;
           }
-          fs.readFile('./index.html',(err,data)=>{
+          fs.readFile('./public/index.html',(err,data)=>{
             if(err){
               res.writeHead(500, {"Content-Type": "text/plain; charset=utf-8"});
             res.end("서버 자체 에러");
