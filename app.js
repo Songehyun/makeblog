@@ -1,26 +1,17 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const loadserver = require('./loadserver.js')
+const loadserver = require('./loadserver.js');
 
 const server = http.createServer((req, res) => {
   if (req.method === "GET"){
-    if (req.url === "/"){
-      fs.readFile(path.join(__dirname, "index.html"), (err, data) =>{
-        if (err) {
-          res.writeHead(500, {"Content-Type": "text/plain"});
-          res.end("500 code는 서버 자체의 에러");
-          return;
-        }
-        res.writeHead(200, {"Content-Type": "text/html; charset=utf-8"});
-        res.end(data);
-      });
-    } else {
-      res.writeHead(404, {"Content-Type": "text/plain; charset=utf-8"});
-      res.end("404 code는 페이지를 찾을 수 없음");
-    }
+  loadserver("/", "index.html", req, res);
+  loadserver("/index.html", "index.html", req, res);
+  loadserver("/indexstyle.css", "indexstyle.css", req, res);
+  loadserver("/writenote.html", "writenote.html", req, res);
+  loadserver("/writenotestyle.css", "writenotestyle.css", req, res);
   } else if (req.method === "POST") {
-    if (req.url === "/submit"){
+    if (req.url === "/test"){
       let body = "";
       req.on("data", (chunk) => {
         body += chunk.toString();
@@ -31,8 +22,8 @@ const server = http.createServer((req, res) => {
         const writecontent = parsedData.get("writecontent");
 
         const jsonData = {
-          제목: writetitle,
-          내용: writecontent
+          writetitle : writetitle,
+          writecontent : writecontent
         };
         const jsonDataString = JSON.stringify(jsonData, null, 2);
         fs.writeFile(path.join(__dirname, "data.json"), jsonDataString, (err) => {
@@ -42,15 +33,15 @@ const server = http.createServer((req, res) => {
             return;
           }
           res.writeHead(200, {"Content-Type": "application/json; charset=utf-8"});
-          let jsonResponse = JSON.stringify({ message: "데이터가 성공적으로 저장됨"});
-          res.end(jsonResponse);
+          res.end();
         });
       });
     } else {
       res.writeHead(404, {"Content-Type": "text/plain; charset=utf-8"});
       res.end("404 code는 페이지를 찾을 수 없음");
     }
-  } else {
+  } 
+  else {
     res.writeHead(404, {"Content-Type": "text/plain; charset=utf-8"});
     res.end("404 code는 페이지를 찾을 수 없음");
   }
