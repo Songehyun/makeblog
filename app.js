@@ -4,13 +4,16 @@ const path = require('path');
 const flieUtils = require('./loadserver.js');
 
 let newdiv = '';
+let today = new Date();   
+let year = today.getFullYear();
 
 const server = http.createServer((req, res) => {
-  let url = req.url
-  let filePath = flieUtils.getFliePath(url)
-  let ext = flieUtils.getFlieExtension(filePath)
-  let contype = flieUtils.getContentType(ext)
   if (req.method === "GET"){
+    let url = req.url
+    let filePath = flieUtils.getFliePath(url)
+    let ext = flieUtils.getFlieExtension(filePath)
+    let contype = flieUtils.getContentType(ext)
+
     if(req.url === url){
       console.log(req.url);
       fs.readFile(filePath,(err,data)=>{
@@ -59,7 +62,7 @@ const server = http.createServer((req, res) => {
         </body>
         </html>`;
 
-        newdiv += `<div onclick="location.href='./${writetitle}.html'">${writetitle}</div>`
+        newdiv += `<div onclick="location.href='./${year}${writetitle}.html'">${year}${writetitle}</div>`
 
         const indexData = `<!DOCTYPE html>
         <html lang="en">
@@ -94,7 +97,7 @@ const server = http.createServer((req, res) => {
             console.log("오류")
           }
         });
-        fs.writeFile(path.join(__dirname, `./public/${writetitle}.html`), htmlData, (err) => {
+        fs.writeFile(path.join(__dirname, `./public/${year}${writetitle}.html`), htmlData, (err) => {
           if (err) {
             res.writeHead(500, {"Content-Type": "text/plain; charset=utf-8"});
             res.end("서버 자체 에러");

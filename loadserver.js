@@ -34,6 +34,23 @@ const flieUtils = {
 module.exports = flieUtils;
 
 
-// let fliePath = flieUtils.getFliePath(req.url)
-// let ext = flieUtils.getFlieExtension(fliePath)
-// let contype = flieUtils.getContentType(ext)
+// if (req.method === "GET"){
+//   let url = req.url
+//   let filePath = flieUtils.getFliePath(url)
+//   let ext = flieUtils.getFlieExtension(filePath)
+//   let contype = flieUtils.getContentType(ext)
+  
+//   if(req.url === url){
+//     console.log(req.url);
+//     fs.readFile(filePath,(err,data)=>{
+//       if(err){
+//         res.writeHead(500,{"Content-Type":"text/plain; charset=UTF-8"});
+//         res.end("서버 연결 오류");
+//         return;
+//       } else {
+//         res.writeHead(200,{"Content-Type": contype});
+//         res.end(data);
+//       }
+//     })
+//   }
+// }
