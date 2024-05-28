@@ -1,17 +1,29 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const loadserver = require('./loadserver.js');
+const flieUtils = require('./loadserver.js');
 
 let newdiv = '';
 
 const server = http.createServer((req, res) => {
+  let url = req.url
+  let fliePath = flieUtils.getFliePath(url)
+  let ext = flieUtils.getFlieExtension(fliePath)
+  let contype = flieUtils.getContentType(ext)
   if (req.method === "GET"){
-  loadserver("/", "index.html", "text/html", req, res);
-  loadserver("/index.html", "index.html","text/html", req, res);
-  loadserver("/indexstyle.css", "indexstyle.css","text/css", req, res);
-  loadserver("/writenote.html", "writenote.html","text/html", req, res);
-  loadserver("/writenotestyle.css", "writenotestyle.css","text/css", req, res);
+    console.log(req.url);
+    if(req.url === url){
+      fs.readFile(filePath,(err,data)=>{
+        if(err){
+          res.writeHead(500,{"Content-Type":"text/plain; charset=UTF-8"});
+          res.end("서버 연결 오류");
+          return;
+        } else {
+          res.writeHead(200,{"Content-Type": contype});
+          res.end(data);
+        }
+      })
+    }
   } else if (req.method === "POST") {
     if (req.url === "/submit"){
       let body = "";
@@ -78,7 +90,7 @@ const server = http.createServer((req, res) => {
         </body>
         </html>`;
 
-        fs.writeFile(path.join(__dirname, "index.html"), indexData, (err) => {
+        fs.writeFile(path.join(__dirname, "./public/index.html"), indexData, (err) => {
 
         })
         fs.writeFile(path.join(__dirname, `./public/${writetitle}.html`), htmlData, (err) => {

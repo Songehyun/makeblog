@@ -47,5 +47,10 @@ body{
 #NoteTitle{
   display: flex;
   flex-direction: column-reverse;
+  justify-content: flex-end;
   height: 80vh;
+}
+#NoteTitle > div{
+  display: flex;
+  height: 5vh;
 }
