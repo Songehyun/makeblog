@@ -8,7 +8,6 @@ const text = fs.readFileSync('./public/indexupdate.txt');
 // text파일의 내용으로 html 부분 조정하기
 let newdiv = text.toString();
 
-
 const server = http.createServer((req, res) => {
   if (req.method === "GET"){
     let url = req.url
@@ -42,27 +41,27 @@ const server = http.createServer((req, res) => {
 
         const htmlData = `<!DOCTYPE html>
         <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>note</title>
-        </head>
-        <link rel="stylesheet" href="allnotestyle.css">
-        <body>
-          <div id="root">
-            <div>
+          <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>note</title>
+          </head>
+          <link rel="stylesheet" href="allnotestyle.css">
+          <body>
+            <div id="root">
               <div>
-                <h2 onclick="location.href='./index.html'">${writetitle}</h2>
+                <div>
+                  <h2 onclick="location.href='./index.html'">${writetitle}</h2>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <pre>${writecontent}</pre>
+                </div>
               </div>
             </div>
-            <div>
-              <div>
-                <pre>${writecontent}</pre>
-              </div>
-            </div>
-          </div>
-        </body>
+          </body>
         </html>`;
 
         newdiv += `<div onclick="location.href='./${writetitle}.html'">${writetitle}</div>`
