@@ -3,9 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const flieUtils = require('./loadserver.js');
 
-let newdiv = '';
-let today = new Date();   
-let year = today.getFullYear();
+const text = fs.readFileSync('./public/indexupdate.txt');
+
+// text파일의 내용으로 html 부분 조정하기
+let newdiv = text.toString();
+
 
 const server = http.createServer((req, res) => {
   if (req.method === "GET"){
@@ -37,6 +39,7 @@ const server = http.createServer((req, res) => {
         const parsedData = new URLSearchParams(body);
         const writetitle = parsedData.get("writetitle");
         const writecontent = parsedData.get("writecontent");
+
         const htmlData = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -62,7 +65,7 @@ const server = http.createServer((req, res) => {
         </body>
         </html>`;
 
-        newdiv += `<div onclick="location.href='./${year}${writetitle}.html'">${year}${writetitle}</div>`
+        newdiv += `<div onclick="location.href='./${writetitle}.html'">${writetitle}</div>`
 
         const indexData = `<!DOCTYPE html>
         <html lang="en">
@@ -92,12 +95,19 @@ const server = http.createServer((req, res) => {
         </body>
         </html>`;
 
+        // 파일 제목을 저장해서 불러오도록 도와주는 txt
+        fs.writeFile(path.join(__dirname, "./public/indexupdate.txt"), newdiv, (err) => {
+          if(err){
+            console.log("오류")
+          }
+        })
+      
         fs.writeFile(path.join(__dirname, "./public/index.html"), indexData, (err) => {
           if(err){
             console.log("오류")
           }
         });
-        fs.writeFile(path.join(__dirname, `./public/${year}${writetitle}.html`), htmlData, (err) => {
+        fs.writeFile(path.join(__dirname, `./public/${writetitle}.html`), htmlData, (err) => {
           if (err) {
             res.writeHead(500, {"Content-Type": "text/plain; charset=utf-8"});
             res.end("서버 자체 에러");
