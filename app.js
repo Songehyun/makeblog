@@ -3,10 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const flieUtils = require('./loadserver.js');
 
-const text = fs.readFileSync('./public/indexupdate.txt');
-
 // text파일의 내용으로 html 부분 조정하기
-let newdiv = text.toString();
+
+`<div onclick="location.href='./${writetitle}.html'">${writetitle}</div>`
+
+let newdiv = indexupdat.json;
 
 const server = http.createServer((req, res) => {
   if (req.method === "GET"){
@@ -95,12 +96,22 @@ const server = http.createServer((req, res) => {
         </html>`;
 
         // 파일 제목을 저장해서 불러오도록 도와주는 txt
-        fs.writeFile(path.join(__dirname, "./public/indexupdate.txt"), newdiv, (err) => {
+        fs.readFile(path.join(__dirname, "./public/indexupdate.json"), (err, data) => {
           if(err){
-            console.log("오류")
+            console.log("오류");
+          }else{
+          const parse = JSON.parse(data);
+          parse.push(writetitle);
+          // console.log(parse);
+          const jparse = JSON.stringify(parse)
+          fs.writeFile (path.join(__dirname, "./public/indexupdate.json"), jparse,(err) => {
+            if(err){
+              console.log("오류");
+            }
+          });
           }
-        })
-      
+        });
+
         fs.writeFile(path.join(__dirname, "./public/index.html"), indexData, (err) => {
           if(err){
             console.log("오류")
