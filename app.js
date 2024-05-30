@@ -3,14 +3,21 @@ const fs = require('fs');
 const path = require('path');
 const flieUtils = require('./loadserver.js');
 
-// text파일의 내용으로 html 부분 조정하기
+let newdiv = '';
 
-`<div onclick="location.href='./${writetitle}.html'">${writetitle}</div>`
-
-let newdiv = indexupdat.json;
-
-const server = http.createServer((req, res) => {
-  if (req.method === "GET"){
+    fs.readFile(path.join(__dirname, "./public/indexupdate.json"), (err, data) => {
+      if(err){
+        console.log("에러")
+      } else {
+        const parse = JSON.parse(data);
+        for(let i = 0; i < parse.length; i++){
+        newdiv += `<div onclick="location.href='./${parse[i]}.html'">${parse[i]}</div>`;
+        }
+      }
+    });
+    
+    const server = http.createServer((req, res) => {
+    if (req.method === "GET"){
     let url = req.url
     let filePath = flieUtils.getFliePath(url)
     let ext = flieUtils.getFlieExtension(filePath)
@@ -65,8 +72,6 @@ const server = http.createServer((req, res) => {
           </body>
         </html>`;
 
-        newdiv += `<div onclick="location.href='./${writetitle}.html'">${writetitle}</div>`
-
         const indexData = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -95,6 +100,8 @@ const server = http.createServer((req, res) => {
         </body>
         </html>`;
 
+        newdiv += `<div onclick="location.href='./${writetitle}.html'">${writetitle}</div>`
+
         // 파일 제목을 저장해서 불러오도록 도와주는 txt
         fs.readFile(path.join(__dirname, "./public/indexupdate.json"), (err, data) => {
           if(err){
@@ -102,7 +109,6 @@ const server = http.createServer((req, res) => {
           }else{
           const parse = JSON.parse(data);
           parse.push(writetitle);
-          // console.log(parse);
           const jparse = JSON.stringify(parse)
           fs.writeFile (path.join(__dirname, "./public/indexupdate.json"), jparse,(err) => {
             if(err){
