@@ -1,44 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>writenote</title>
-<link rel="stylesheet" href="writenotestyle.css">
-</head>
-<body>
-  <div id="HomeTitle">
-    <h2 onclick="location.href='./index.html'">홈페이지 이름</h2>
-  </div>
-  <form action="/submit" method="post">
-    <div id="root">
-      <div>
-        <div>
-        <label for="title">제목</label>
-        </div>
-      </div>
-      <div>
-        <div>
-          <input type="text" name="writetitle" id="writetitle" placeholder="제목을 입력하세요">
-        </div>
-      </div>
-      <div>
-        <div>
-          <label for="content">내용</label>
-        </div>
-      </div>
-      <div>
-        <div>
-          <textarea name="writecontent" id="writecontent" cols="265" rows="25" placeholder="내용을 입력하세요"></textarea>
-        </div>
-      </div>
-      <div> 
-        <div>
-          <button type="submit" id="submitbutton">글쓰기</button>
-        </div>
-      </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>writenote</title>
+    <link rel="stylesheet" href="writenotestyle.css" />
+  </head>
+  <body>
+    <div id="HomeTitle">
+      <h2 onclick="location.href='./index.html'">보드게임 패치노트</h2>
     </div>
-  </form>
-</body>
+    <form action="/submit" method="post">
+      <div id="root">
+        <div>
+          <div>
+            <label for="title">제목</label>
+          </div>
+        </div>
+        <div>
+          <div>
+            <input
+              type="text"
+              name="writetitle"
+              id="writetitle"
+              placeholder="제목을 입력하세요"
+            />
+          </div>
+        </div>
+        <div>
+          <div>
+            <label for="content">내용</label>
+          </div>
+        </div>
+        <div>
+          <div>
+            <textarea
+              name="writecontent"
+              id="writecontent"
+              cols="265"
+              rows="25"
+              placeholder="내용을 입력하세요"
+            ></textarea>
+          </div>
+        </div>
+        <div>
+          <div>
+            <button type="submit" id="submitbutton">글쓰기</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </body>
 </html>
