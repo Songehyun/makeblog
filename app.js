@@ -2,6 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const flieUtils = require("./loadserver.js");
+const temple = require("./temple.js");
 
 let newdiv = "";
 let decoderefer = "";
@@ -47,70 +48,9 @@ const server = http.createServer((req, res) => {
         const parsedData = new URLSearchParams(body);
         const writetitle = parsedData.get("writetitle");
         const writecontent = parsedData.get("writecontent");
-
-        const htmlData = `<!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>note</title>
-          </head>
-          <link rel="stylesheet" href="allnotestyle.css">
-          <body>
-            <div id="root">
-              <div>
-                <div>
-                  <h2 onclick="location.href='./index.html'">${writetitle}</h2>
-                </div>
-              </div>
-              <div>
-                <div>
-                  <pre>${writecontent}</pre>
-                </div>
-              </div>
-              <div>
-                <form action="/delete" method="post">
-                <button type="submit" id="delete">삭제</button>
-                </form>
-                <form action="/modifywrite" method="post">
-                <button type="submit" id="modifywrite">수정</button>
-                </form>
-              </div>
-            </div>
-          </body>
-        </html>`;
-
+        const htmlData = temple.htmlData(writetitle, writecontent);
         newdiv += `<div onclick="location.href='./${writetitle}.html'">${writetitle}</div>`;
-
-        const indexData = `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>indexpage</title>
-          <link rel="stylesheet" href="indexstyle.css">
-        </head>
-        <body>
-          <div id="root">
-            <div>
-              <div id="HomeTitle">
-                <h1 onclick="location.href='./index.html'">홈페이지 이름</h2>
-              </div>
-            </div>
-            <div>
-              <div id="MakeNote">
-                <h2 onclick="location.href='./writenote.html'">글쓰기</h2>
-              </div>
-            </div>
-            <div id="NoteTitle">
-              ${newdiv}
-            </div>
-          </div>
-        </body>
-        </html>`;
-
+        const indexData = temple.indexData(newdiv);
         // 파일 제목을 저장해서 불러오도록 도와주는 txt
         fs.readFile(
           path.join(__dirname, "./public/indexupdate.json"),
@@ -177,42 +117,8 @@ const server = http.createServer((req, res) => {
         const modifydata = new URLSearchParams(body);
         const modifytitle = modifydata.get("modifytitle");
         const modifycontent = modifydata.get("modifycontent");
-
-        const modifyData = `<!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>note</title>
-        </head>
-        <link rel="stylesheet" href="allnotestyle.css">
-        <body>
-          <div id="root">
-            <div>
-              <div>
-                <h2 onclick="location.href='./index.html'">${modifytitle}</h2>
-              </div>
-            </div>
-            <div>
-              <div>
-                <pre>${modifycontent}</pre>
-              </div>
-            </div>
-            <div>
-              <form action="/delete" method="post">
-              <button type="submit" id="delete">삭제</button>
-              </form>
-              <form action="/modifywrite" method="post">
-              <button type="submit" id="modifywrite">수정</button>
-              </form>
-            </div>
-          </div>
-        </body>
-      </html>`;
-
+        const modifyData = temple.modifyData(modifytitle, modifycontent);
         const modifypath = path.join(__dirname, "public");
-
         fs.readdir(path.join(__dirname, "public"), (err, data) => {
           for (let i = 0; i < data.length; i++) {
             if (data[i] === decoderefer) {
@@ -259,33 +165,8 @@ const server = http.createServer((req, res) => {
                             for (let i = 0; i < parse.length; i++) {
                               newdiv += `<div onclick="location.href='./${parse[i]}.html'">${parse[i]}</div>`;
                             }
-                            const indexData = `<!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                      <meta charset="UTF-8">
-                      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                      <title>indexpage</title>
-                      <link rel="stylesheet" href="indexstyle.css">
-                    </head>
-                    <body>
-                      <div id="root">
-                        <div>
-                          <div id="HomeTitle">
-                            <h1 onclick="location.href='./index.html'">홈페이지 이름</h2>
-                          </div>
-                        </div>
-                        <div>
-                          <div id="MakeNote">
-                            <h2 onclick="location.href='./writenote.html'">글쓰기</h2>
-                          </div>
-                        </div>
-                        <div id="NoteTitle">
-                          ${newdiv}
-                        </div>
-                      </div>
-                    </body>
-                    </html>`;
+                            const indexData = temple.indexData(newdiv);
+
                             fs.writeFile(
                               path.join(__dirname, "./public/index.html"),
                               indexData,
@@ -351,33 +232,7 @@ const server = http.createServer((req, res) => {
                             for (let i = 0; i < parse.length; i++) {
                               newdiv += `<div onclick="location.href='./${parse[i]}.html'">${parse[i]}</div>`;
                             }
-                            const indexData = `<!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                      <meta charset="UTF-8">
-                      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                      <title>indexpage</title>
-                      <link rel="stylesheet" href="indexstyle.css">
-                    </head>
-                    <body>
-                      <div id="root">
-                        <div>
-                          <div id="HomeTitle">
-                            <h1 onclick="location.href='./index.html'">홈페이지 이름</h2>
-                          </div>
-                        </div>
-                        <div>
-                          <div id="MakeNote">
-                            <h2 onclick="location.href='./writenote.html'">글쓰기</h2>
-                          </div>
-                        </div>
-                        <div id="NoteTitle">
-                          ${newdiv}
-                        </div>
-                      </div>
-                    </body>
-                    </html>`;
+                            const indexData = temple.indexData(newdiv);
                             fs.writeFile(
                               path.join(__dirname, "./public/index.html"),
                               indexData,
