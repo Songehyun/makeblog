@@ -193,10 +193,11 @@ let newdiv = '';
       let wordrefer = sprefer.split('.')[0];
       let decoderefer = decodeURI(sprefer);
       let decodeword = decodeURI(wordrefer);
+
       fs.readdir(path.join(__dirname, "public"), (err,data)=>{
         for(let i = 0; i < data.length; i++){
         if(data[i] === decoderefer){
-          fs.unlink(`${modifypath}/${decoderefer}`, (err) => {
+          fs.rename(`${modifypath}/${decoderefer}`,`${modifypath}/${modifytitle}.html`, (err) => {
             if(err) {console.log("삭제못함");}
           });
           fs.writeFile(`${modifypath}/${modifytitle}.html`, modifyData, (err) => {
@@ -204,6 +205,7 @@ let newdiv = '';
           });
         }
       }
+    });
       fs.readFile(path.join(__dirname, "./public/indexupdate.json"), (err, data) => {
         if(err) {
           console.log("에러떳음")
@@ -262,7 +264,6 @@ let newdiv = '';
           }
         }
       })
-      });
     });
       res.writeHead(302, { Location: "/" });
       res.end();
