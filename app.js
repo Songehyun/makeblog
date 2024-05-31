@@ -70,7 +70,9 @@ let newdiv = '';
               <div>
                 <form action="/delete" method="post">
                 <button type="submit" id="delete">삭제</button>
-                <button type="submit" id="modify">수정</button>
+                </form>
+                <form action="/modifywrite" method="post">
+                <button type="submit" id="modifywrite">수정</button>
                 </form>
               </div>
             </div>
@@ -139,7 +141,131 @@ let newdiv = '';
           res.end();
         });
       });
+    } else if (req.url === "/modifywrite") {
+      res.writeHead(302, { Location: "/modifywrite.html" });
+      res.end();
+    } else if (req.url === "/modify") {
+        let body = "";
+        req.on("data", (chunk) => {
+          body += chunk.toString();
+        });
+        req.on("end", () => {
+      const modifydata = new URLSearchParams(body);
+      const modifytitle = modifydata.get("modifytitle");
+      const modifycontent = modifydata.get("modifycontent");
 
+      const modifyData = `<!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>note</title>
+        </head>
+        <link rel="stylesheet" href="allnotestyle.css">
+        <body>
+          <div id="root">
+            <div>
+              <div>
+                <h2 onclick="location.href='./index.html'">${modifytitle}</h2>
+              </div>
+            </div>
+            <div>
+              <div>
+                <pre>${modifycontent}</pre>
+              </div>
+            </div>
+            <div>
+              <form action="/delete" method="post">
+              <button type="submit" id="delete">삭제</button>
+              </form>
+              <form action="/modifywrite" method="post">
+              <button type="submit" id="modifywrite">수정</button>
+              </form>
+            </div>
+          </div>
+        </body>
+      </html>`;
+
+      const modifypath = path.join(__dirname, "public")
+      let allrefer = req.headers.referer
+      let sprefer = allrefer.split('/')[3];
+      let wordrefer = sprefer.split('.')[0];
+      let decoderefer = decodeURI(sprefer);
+      let decodeword = decodeURI(wordrefer);
+      fs.readdir(path.join(__dirname, "public"), (err,data)=>{
+        for(let i = 0; i < data.length; i++){
+        if(data[i] === decoderefer){
+          fs.unlink(`${modifypath}/${decoderefer}`, (err) => {
+            if(err) {console.log("삭제못함");}
+          });
+          fs.writeFile(`${modifypath}/${modifytitle}.html`, modifyData, (err) => {
+            if(err) {console.log("생성못함");}
+          });
+        }
+      }
+      fs.readFile(path.join(__dirname, "./public/indexupdate.json"), (err, data) => {
+        if(err) {
+          console.log("에러떳음")
+        } else {
+          const parse = JSON.parse(data);
+          for(let y = 0; y < parse.length; y++){
+            if(parse[y] === decodeword){
+              parse.with(y, modifytitle);
+              newparse = JSON.stringify(parse);
+              fs.writeFile("./public/indexupdate.json",`${newparse}`,(err) => {
+                if(err){
+                  console.error(err);
+                } else {
+                  newdiv = '';
+                  fs.readFile(path.join(__dirname, "./public/indexupdate.json"), (err, data) => {
+                    const parse = JSON.parse(data);
+                    for(let i = 0; i < parse.length; i++){
+                    newdiv += `<div onclick="location.href='./${parse[i]}.html'">${parse[i]}</div>`;
+                    }
+                    const indexData = `<!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                      <meta charset="UTF-8">
+                      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                      <title>indexpage</title>
+                      <link rel="stylesheet" href="indexstyle.css">
+                    </head>
+                    <body>
+                      <div id="root">
+                        <div>
+                          <div id="HomeTitle">
+                            <h1 onclick="location.href='./index.html'">홈페이지 이름</h2>
+                          </div>
+                        </div>
+                        <div>
+                          <div id="MakeNote">
+                            <h2 onclick="location.href='./writenote.html'">글쓰기</h2>
+                          </div>
+                        </div>
+                        <div id="NoteTitle">
+                          ${newdiv}
+                        </div>
+                      </div>
+                    </body>
+                    </html>`;
+                    fs.writeFile(path.join(__dirname, "./public/index.html"), indexData, (err) => {
+                      if(err){
+                        console.log("오류")
+                      }
+                    });
+                  });
+                }
+              });
+            }
+          }
+        }
+      })
+      });
+    });
+      res.writeHead(302, { Location: "/" });
+      res.end();
     } else if (req.url === "/delete") {
       const deletepath = path.join(__dirname, "./public")
       let allrefer = req.headers.referer
