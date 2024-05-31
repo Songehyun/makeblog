@@ -4,6 +4,8 @@ const path = require('path');
 const flieUtils = require('./loadserver.js');
 
 let newdiv = '';
+let decoderefer = '';
+let decodeword = '';
 
     fs.readFile(path.join(__dirname, "./public/indexupdate.json"), (err, data) => {
       if(err){
@@ -142,6 +144,11 @@ let newdiv = '';
         });
       });
     } else if (req.url === "/modifywrite") {
+      let allrefer = req.headers.referer
+      let sprefer = allrefer.split('/')[3];
+      let wordrefer = sprefer.split('.')[0];
+      decoderefer = decodeURI(sprefer);
+      decodeword = decodeURI(wordrefer);
       res.writeHead(302, { Location: "/modifywrite.html" });
       res.end();
     } else if (req.url === "/modify") {
@@ -188,16 +195,11 @@ let newdiv = '';
       </html>`;
 
       const modifypath = path.join(__dirname, "public")
-      let allrefer = req.headers.referer
-      let sprefer = allrefer.split('/')[3];
-      let wordrefer = sprefer.split('.')[0];
-      let decoderefer = decodeURI(sprefer);
-      let decodeword = decodeURI(wordrefer);
-
+    
       fs.readdir(path.join(__dirname, "public"), (err,data)=>{
         for(let i = 0; i < data.length; i++){
         if(data[i] === decoderefer){
-          fs.rename(`${modifypath}/${decoderefer}`,`${modifypath}/${modifytitle}.html`, (err) => {
+          fs.unlink(`${modifypath}/${decoderefer}`, (err) => {
             if(err) {console.log("삭제못함");}
           });
           fs.writeFile(`${modifypath}/${modifytitle}.html`, modifyData, (err) => {
@@ -213,7 +215,7 @@ let newdiv = '';
           const parse = JSON.parse(data);
           for(let y = 0; y < parse.length; y++){
             if(parse[y] === decodeword){
-              parse.with(y, modifytitle);
+              parse.splice(y, 1, modifytitle);
               newparse = JSON.stringify(parse);
               fs.writeFile("./public/indexupdate.json",`${newparse}`,(err) => {
                 if(err){
