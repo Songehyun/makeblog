@@ -4,10 +4,12 @@ const path = require("path");
 const flieUtils = require("./loadserver.js");
 const temple = require("./temple.js");
 
+// newdiv = index.html의 내용을 업데이트 하기 위한 변수, decode 두개 = 수정시 필요한 referer데이터를 받기 위한 변수
 let newdiv = "";
 let decoderefer = "";
 let decodeword = "";
 
+// indexupdate.json 의 내용을 newdiv에 저장
 fs.readFile(path.join(__dirname, "./public/indexupdate.json"), (err, data) => {
   if (err) {
     console.log("에러");
