@@ -21,6 +21,7 @@ fs.readFile(path.join(__dirname, "./public/indexupdate.json"), (err, data) => {
   }
 });
 
+// loadserver.js 모듈을 사용해서 서버를 불러오기 어떤 파일이든 Get에서 요청하는것을 보여줌
 const server = http.createServer((req, res) => {
   if (req.method === "GET") {
     let url = req.url;
@@ -40,7 +41,9 @@ const server = http.createServer((req, res) => {
         }
       });
     }
+    // 메서드가 POST일 경우
   } else if (req.method === "POST") {
+    //submit 버튼은 writenote.html의 글쓰기 버튼에 있음
     if (req.url === "/submit") {
       let body = "";
       req.on("data", (chunk) => {
@@ -48,12 +51,14 @@ const server = http.createServer((req, res) => {
       });
       req.on("end", () => {
         const parsedData = new URLSearchParams(body);
+        // wirtenote의 제목과 내용을 읽어서 사용하기 위해 변수에 담아준다
         const writetitle = parsedData.get("writetitle");
         const writecontent = parsedData.get("writecontent");
+        // 템플릿 모듈을 사용해서 htmlData에 들어갈 부분을 만듬
         const htmlData = temple.htmlData(writetitle, writecontent);
+        // newdiv에 담긴 내용으로 index.html의 NoteTitle의 자식 요소를 바꿔줌
         newdiv += `<div onclick="location.href='./${writetitle}.html'">${writetitle}</div>`;
         const indexData = temple.indexData(newdiv);
-        // 파일 제목을 저장해서 불러오도록 도와주는 txt
         fs.readFile(
           path.join(__dirname, "./public/indexupdate.json"),
           (err, data) => {
@@ -61,8 +66,10 @@ const server = http.createServer((req, res) => {
               console.log("오류");
             } else {
               const parse = JSON.parse(data);
+              //제목을 저장해서 stringify해줌
               parse.push(writetitle);
               const jparse = JSON.stringify(parse);
+              // 저장된 제목들을 indexupdate.json에 담아준다.
               fs.writeFile(
                 path.join(__dirname, "./public/indexupdate.json"),
                 jparse,
@@ -75,7 +82,7 @@ const server = http.createServer((req, res) => {
             }
           }
         );
-
+        // 저장된 indexData로 index.html 업데이트
         fs.writeFile(
           path.join(__dirname, "./public/index.html"),
           indexData,
@@ -85,7 +92,7 @@ const server = http.createServer((req, res) => {
             }
           }
         );
-
+        // submit에서 받아온 제목으로 제목.html 파일을 만듦
         fs.writeFile(
           path.join(__dirname, `./public/${writetitle}.html`),
           htmlData,
