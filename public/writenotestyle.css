@@ -28,6 +28,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 10vh;
+  align-items: center;
 }
 #root > div:nth-child(2) > div:nth-child(1) {
   display: flex;
@@ -61,6 +62,8 @@ body {
   display: flex;
   flex-direction: column;
   height: 10vh;
+  align-items: flex-end;
+  padding-right: 2vw;
 }
 #root > div:nth-child(5) > div {
   display: flex;
@@ -74,6 +77,7 @@ body {
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  align-items: center;
 }
 #writecontent {
   resize: none;

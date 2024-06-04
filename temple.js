@@ -50,7 +50,7 @@ const temple = {
     <div id="root">
       <div>
         <div id="HomeTitle">
-          <h1 onclick="location.href='./index.html'">홈페이지 이름</h2>
+          <h1 onclick="location.href='./index.html'">보드게임 패치노트</h2>
         </div>
       </div>
       <div>
